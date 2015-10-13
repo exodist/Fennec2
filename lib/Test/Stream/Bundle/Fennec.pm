@@ -9,18 +9,13 @@ sub plugins {
         sub { strict->import(); warnings->import() },
         qw{
             SRand
-            IPC
-            TAP
-            ExitSummary
-            Core
-            Context
-            Exception
-            Warnings
-            Compare *
-            Mock
             UTF8
-            Spec
-            Fennec
+            IPC
+            Mock
+            Core    *
+            Compare *
+            Spec    *
+            Fennec  *
         },
     );
 }
@@ -70,35 +65,12 @@ imported.
 
 See L<Test::Stream::Plugin::Compare> for more details.
 
-=item Context
-
-This provides the C<context()> function which is useful in writing new tools,
-or wrapping existing ones.
-
-See L<Test::Stream::Plugin::Context> for more details.
-
-=item Core
+=item Core => *
 
 This provides essential tools such as C<ok()>, C<done_testing()>, as well as
 others.
 
 See L<Test::Stream::Plugin::Core> for more details.
-
-=item Exception
-
-This provides tools to help you intercept or check for the absence of
-exceptions. This is very similar to L<Test::Fatal>, in fact L<Test::Fatal> is
-probably better. If you can, use L<Test::Fatal>, if you cannot then this may
-suffice. The functions exported do not conflict with the ones exported by
-L<Test::Fatal> so both can be loaded together.
-
-See L<Test::Stream::Plugin::Exception> for more details.
-
-=item ExitSummary
-
-This provides extra diagnostics at the end of failing tests.
-
-See L<Test::Stream::Plugin::ExitSummary> for more details.
 
 =item IPC
 
@@ -113,12 +85,6 @@ nearly any kind of mocking you might need.
 
 See L<Test::Stream::Plugin::Mock> for more details.
 
-=item TAP
-
-This sets TAP to be the default output format.
-
-See L<Test::Stream::Plugin::TAP> for more details.
-
 =item UTF8
 
 This module turns on the utf8 pragma for your test file, it also sets STDERR,
@@ -126,13 +92,7 @@ STDOUT and the formatter output handles to use utf8.
 
 See L<Test::Stream::Plugin::UTF8> for more details.
 
-=item Warnings
-
-This plugin provides tools to help intercept warnings.
-
-See L<Test::Stream::Plugin::Warnings> for more details.
-
-=item Spec
+=item Spec => '*'
 
 This plugin provides RSPEC like workflows.
 
@@ -142,7 +102,7 @@ See L<Test::Stream::Plugin::Spec>.
 
 This plugin initiates the random seed using todays date.
 
-=item Fennec
+=item Fennec => '*'
 
 This plugin sets the L<Fennec2::Runner> as the Spec runner.
 
