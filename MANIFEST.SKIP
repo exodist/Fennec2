@@ -90,3 +90,5 @@ MANIFEST.SKIP
 test.pl
 
 ^Fennec2-*
+
+ts_lib

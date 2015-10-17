@@ -35,7 +35,7 @@ sub opt_hide {
     push @{$args->{'Test::Stream::Plugin::Hide'}} => $class;
 }
 
-sub opt_parallel {
+sub opt_async {
     shift;
     my %params = @_;
     my $list = $params{list};
@@ -48,7 +48,7 @@ sub opt_parallel {
         unless $args->{'Test::Stream::Plugin::Fennec'};
 
     $args->{'Test::Stream::Plugin::Fennec'} ||= [];
-    push @{$args->{'Test::Stream::Plugin::Fennec'}} => (parallel => $max);
+    push @{$args->{'Test::Stream::Plugin::Fennec'}} => (async => $max);
 }
 
 1;

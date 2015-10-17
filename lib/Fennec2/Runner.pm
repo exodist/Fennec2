@@ -4,36 +4,29 @@ use warnings;
 
 use parent 'Test::Stream::Workflow::Runner';
 
-use Test::Stream::Util qw/try/;
-use List::Util qw/min/;
-
-use Test::Stream::Workflow::Task;
-use Test::Stream::Sync;
+use Carp qw/croak/;
 
 use Test::Stream::HashBase(
-    accessors => [qw/parallel subtests/],
+    accessors => [qw/subtests isolator async/],
 );
+
+use Fennec2::Task;
+use Fennec2::Isolator;
+
+sub run_task { croak "run_task() is unimplemented" }
 
 sub instance {
     my $class = shift;
     my %args = @_;
 
-    # Default to 3 if nothing is specified
-    # Never go above the 'parallel' argument
-    # Never go above FENNEC_PARALLEL env var
-    if (defined($ENV{FENNEC_PARALLEL})) {
-        my @list = ($ENV{FENNEC_PARALLEL});
-        push @list => $args{parallel} if exists $args{parallel};
-        $args{parallel} = min(@list);
-    }
-    else {
-        $args{parallel} = 3 unless exists $args{parallel};
-    }
-
-    $class->new(subtests => 1, %args)
+    return $class->new(
+        %args,
+        subtests => 1,
+        isolator => Fennec2::Isolator->new(async => $args{async}),
+    );
 }
 
-my %SUPPORTED = map {$_ => 1} qw/todo skip iso sync/;
+my %SUPPORTED = map {$_ => 1} qw/todo skip iso async/;
 sub verify_meta {
     my $class = shift;
     my ($unit) = @_;
@@ -54,32 +47,18 @@ sub run {
 
     $self->verify_meta($unit);
 
-    my $task = Test::Stream::Workflow::Task->new(
+    my $task = Fennec2::Task->new(
         unit       => $unit,
         args       => $args,
         runner     => $self,
         no_final   => $no_final,
+        isolator   => $self->{+ISOLATOR},
         no_subtest => !$self->subtests($unit),
     );
 
-    my ($ok, $err) = try { $self->run_task($task) };
-    Test::Stream::Sync->stack->top->cull();
-
-    # Report exceptions
-    unless($ok) {
-        my $ctx = $unit->context;
-        $ctx->ok(0, $unit->name, ["Caught Exception: $err"]);
-    }
+    $self->{+ISOLATOR}->run($task);
 
     return;
 }
-
-sub run_task {
-    my $class = shift;
-    my ($task) = @_;
-
-    return $task->run();
-}
-
 
 1;
