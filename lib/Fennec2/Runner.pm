@@ -15,7 +15,7 @@ use Test::Stream::Sync;
 use Fennec2::Task;
 
 use Test::Stream::HashBase(
-    accessors => [qw/subtests max tid pid running monitor rand/],
+    accessors => [qw/subtests max tid pid running monitor rand no_fork no_threads/],
 );
 
 sub instance {
