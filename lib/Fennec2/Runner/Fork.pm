@@ -1,4 +1,4 @@
-package Fennec2::Isolate::Fork;
+package Fennec2::Runner::Fork;
 use strict;
 use warnings;
 
@@ -6,9 +6,9 @@ use POSIX;
 
 use Scope::Guard qw/guard/;
 
-use Fennec2::Isolator();
+use Fennec2::Runner();
 use Test::Stream::HashBase(
-    base => 'Fennec2::Isolator',
+    base => 'Fennec2::Runner',
 );
 
 sub spawn {

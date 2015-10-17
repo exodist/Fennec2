@@ -1,10 +1,10 @@
-package Fennec2::Isolator::None;
+package Fennec2::Runner::NoIso;
 use strict;
 use warnings;
 
-use Fennec2::Isolator();
+use Fennec2::Runner();
 use Test::Stream::HashBase(
-    base => 'Fennec2::Isolator',
+    base => 'Fennec2::Runner',
 );
 
 sub can_async { 0 }

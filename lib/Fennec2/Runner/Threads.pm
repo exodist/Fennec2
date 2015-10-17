@@ -1,13 +1,13 @@
-package Fennec2::Isolate::Threads;
+package Fennec2::Runner::Threads;
 use strict;
 use warnings;
 use threads;
 
 use Scope::Guard qw/guard/;
 
-use Fennec2::Isolator();
+use Fennec2::Runner();
 use Test::Stream::HashBase(
-    base => 'Fennec2::Isolator',
+    base => 'Fennec2::Runner',
 );
 
 sub spawn {
