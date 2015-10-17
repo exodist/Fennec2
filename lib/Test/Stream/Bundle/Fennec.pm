@@ -4,6 +4,9 @@ use warnings;
 
 use Test::Stream::Bundle;
 
+require Test::Stream::IPC;
+Test::Stream::IPC->enable_polling;
+
 sub plugins {
     return (
         sub { strict->import(); warnings->import() },
@@ -15,7 +18,7 @@ sub plugins {
             Core    *
             Compare *
             Spec    *
-            Fennec  *
+            Fennec
         },
     );
 }

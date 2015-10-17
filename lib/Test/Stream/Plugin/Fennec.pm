@@ -17,7 +17,13 @@ sub load_ts_plugin {
         'EOF',
     );
 
-    $meta->set_runner(Fennec2::Runner->instance(@_));
+    my $runner = Fennec2::Runner->instance(@_);
+    $meta->set_runner($runner);
+
+    Test::Stream::Sync->post_load(sub {
+        my $hub = Test::Stream::Sync->stack->top;
+        $hub->follow_up(sub { $runner->wait(block => 1) });
+    });
 }
 
 1;

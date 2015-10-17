@@ -8,20 +8,30 @@ use Test::Stream::HashBase(
 );
 
 sub can_async { 0 }
-sub wait { 1 };
 
-sub run {
+sub spawn {
     my $self = shift;
     my ($task) = @_;
-    my $unit = $task->unit;
 
-    return $self->run_task($task)
-        unless $unit->meta->{iso};
+    my $unit = $task->unit;
 
     my $ctx = $unit->context;
     $ctx->debug->set_skip("No isolation method is available");
     $ctx->ok(1, $unit->name);
+
+    return 1;
 }
 
+sub wait {
+    my $self = shift;
+    my %params = @_;
+
+    $self->split_check();
+
+    my $sets  = $params{sets} || $self->{+RUNNING};
+
+    @$sets = ();
+    return 1;
+}
 
 1;

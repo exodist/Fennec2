@@ -15,14 +15,14 @@ sub spawn {
     my $self = shift;
     my ($task) = @_;
 
+    my $pid = fork();
+    die "fork() failed!" unless defined $pid;
+    return $pid if $pid;
+
     my $guard = guard {
         warn "Scope Leak Detected!\n";
         CORE::exit(255);
     };
-
-    my $pid = fork();
-    die "fork() failed!" unless defined $pid;
-    return $pid if $pid;
 
     # In Child.
     my $ok = $self->run_task($task);

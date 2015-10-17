@@ -6,6 +6,9 @@ our $VERSION = "0.000001";
 
 use parent 'Test::Stream';
 
+require Test::Stream::IPC;
+Test::Stream::IPC->enable_polling;
+
 sub default { return qw{-Fennec} }
 
 sub import {
@@ -35,20 +38,24 @@ sub opt_hide {
     push @{$args->{'Test::Stream::Plugin::Hide'}} => $class;
 }
 
-sub opt_async {
-    shift;
-    my %params = @_;
-    my $list = $params{list};
-    my $args = $params{args};
-    my $order = $params{order};
+for my $arg (qw/max rand no_fork no_threads/) {
+    my $sub = sub {
+        shift;
+        my %params = @_;
+        my $list   = $params{list};
+        my $args   = $params{args};
+        my $order  = $params{order};
 
-    my $max = shift @$list;
+        my $val = shift @$list;
 
-    push @{$params{order}} => 'Test::Stream::Plugin::Fennec'
-        unless $args->{'Test::Stream::Plugin::Fennec'};
+        push @{$params{order}} => 'Test::Stream::Plugin::Fennec'
+            unless $args->{'Test::Stream::Plugin::Fennec'};
 
-    $args->{'Test::Stream::Plugin::Fennec'} ||= [];
-    push @{$args->{'Test::Stream::Plugin::Fennec'}} => (async => $max);
+        $args->{'Test::Stream::Plugin::Fennec'} ||= [];
+        push @{$args->{'Test::Stream::Plugin::Fennec'}} => ($arg => $val);
+    };
+    no strict 'refs';
+    *{"opt_$arg"} = $sub;
 }
 
 1;

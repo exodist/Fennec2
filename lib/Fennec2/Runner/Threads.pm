@@ -1,9 +1,7 @@
 package Fennec2::Runner::Threads;
 use strict;
 use warnings;
-use threads;
-
-use Scope::Guard qw/guard/;
+use threads 1.34;
 
 use Fennec2::Runner();
 use Test::Stream::HashBase(
