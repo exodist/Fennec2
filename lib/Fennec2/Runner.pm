@@ -8,7 +8,7 @@ use Test::Stream::Capabilities qw/CAN_REALLY_FORK CAN_THREAD/;
 use Test::Stream::Util qw/try get_tid/;
 use List::Util qw/min shuffle/;
 use Scalar::Util qw/reftype/;
-use Time::HiRes qw/sleep/;
+use Time::HiRes qw/sleep time/;
 use Carp qw/croak/;
 
 use Test::Stream::Sync;
@@ -120,6 +120,8 @@ sub run {
 
     $self->wait(block => 0) while @{$self->{+RUNNING}} >= $self->{+MAX};
 
+    my $ctx = $unit->context;
+    $ctx->send_event('+Fennec2::Event::Stamp', stamp => time(), name => $unit->name, action => 'spawn');
     my $run = $self->spawn($task);
     my $set = [$run, $task];
 
@@ -141,7 +143,16 @@ sub run_task {
     my $self = shift;
     my ($task) = @_;
 
-    my ($ok, $err) = try { $task->run };
+    my ($ok, $err) = try {
+        my $unit = $task->unit;
+        my $ctx = $unit->context;
+
+        $ctx->send_event('+Fennec2::Event::Stamp', stamp => time(), name => $unit->name, action => 'start');
+
+        $task->run();
+
+        $ctx->send_event('+Fennec2::Event::Stamp', stamp => time(), name => $unit->name, action => 'finish');
+    };
     Test::Stream::Sync->stack->top->cull();
 
     # Report exceptions
@@ -170,6 +181,14 @@ sub wait {
             unless ($done) {
                 $done = $self->wait_set(@$set);
                 Test::Stream::Sync->stack->top->cull();
+
+                # A child can be removed form lists multiple times, but it only
+                # waited on once.
+                if ($done) {
+                    my $unit = $task->unit;
+                    my $ctx = $unit->context;
+                    $ctx->send_event('+Fennec2::Event::Stamp', stamp => time(), name => $unit->name, action => 'reap');
+                }
             }
 
             if ($done) {

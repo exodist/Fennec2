@@ -41,7 +41,7 @@ sub wait {
 
     $self->split_check();
 
-    my $sets  = $params{sets} || $self->{+RUNNING};
+    my $sets = $params{sets} || $self->{+RUNNING};
 
     @$sets = ();
     return 1;
