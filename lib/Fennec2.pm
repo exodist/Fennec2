@@ -2,6 +2,9 @@ package Fennec2;
 use strict;
 use warnings;
 
+# Before anything else
+use Trace::Mask::Carp '-wrap';
+
 our $VERSION = "0.000001";
 
 use parent 'Test::Stream';
