@@ -18,6 +18,8 @@ sub plugins {
             Core    *
             Compare *
             Spec    *
+            Exception
+            Warnings
             Fennec
         },
     );
@@ -68,7 +70,7 @@ imported.
 
 See L<Test::Stream::Plugin::Compare> for more details.
 
-=item Core => *
+=item Core => '*'
 
 This provides essential tools such as C<ok()>, C<done_testing()>, as well as
 others.
@@ -77,7 +79,8 @@ See L<Test::Stream::Plugin::Core> for more details.
 
 =item IPC
 
-This loads IPC support so that threading and forking just work.
+This loads IPC support so that threading and forking just work. This also turns
+on event polling so that events come in regularly.
 
 See L<Test::Stream::Plugin::IPC> for more details.
 
@@ -104,6 +107,18 @@ See L<Test::Stream::Plugin::Spec>.
 =item SRand
 
 This plugin initiates the random seed using todays date.
+
+=item Warnings
+
+This plugin gives you tools to intercept and validate warnings.
+
+See L<Test::Stream::Plugin::Warnings> for more details.
+
+=item Exception
+
+This plugin gives you tools to intercept and validate exceptions.
+
+See L<Test::Stream::Plugin::Exception> for more details.
 
 =item Fennec => '*'
 

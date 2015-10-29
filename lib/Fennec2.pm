@@ -59,3 +59,53 @@ for my $arg (qw/max rand no_fork no_threads/) {
 }
 
 1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Fennec2 - Test::Stream based usccessor to Fennnec
+
+=head1 DESCRIPTION
+
+This is a replacement for the L<Fennec> module. It is not drop-in compatible,
+but it does provide all of the same functionality in one way or another.
+
+=head1 SYNOPSIS
+
+    use Fennec2;
+
+    ...
+
+    done_testing;
+
+=head1 MAINTAINERS
+
+=over 4
+
+=item Chad Granum E<lt>exodist@cpan.orgE<gt>
+
+=back
+
+=head1 AUTHORS
+
+=over 4
+
+=item Chad Granum E<lt>exodist@cpan.orgE<gt>
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright 2015 Chad Granum E<lt>exodist7@gmail.comE<gt>.
+
+This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+See F<http://www.perl.com/perl/misc/Artistic.html>
+
+=cut

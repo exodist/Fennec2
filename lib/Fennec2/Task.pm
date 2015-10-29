@@ -4,6 +4,8 @@ use warnings;
 
 use Carp qw/confess/;
 
+use Test::Stream::Util qw/try/;
+
 use Test::Stream::Workflow::Task;
 use Test::Stream::HashBase(
     base => 'Test::Stream::Workflow::Task',
@@ -16,15 +18,25 @@ sub _run_primaries {
     my $monitor = [];
     push @{$runner->monitor} => $monitor;
 
-    $self->SUPER::_run_primaries(@_);
+    my ($ok, $err) = try {
+        $self->SUPER::_run_primaries(@_);
+    };
 
-    confess "Internal error: Monitor stack mismatch!"
-        unless @{$runner->monitor} && $runner->monitor->[-1] == $monitor;
+    unless (@{$runner->monitor} && $runner->monitor->[-1] == $monitor) {
+        my $error = "Internal error: Monitor stack mismatch!";
+        if ($err) {
+            chomp($err);
+            $error .= " (After catching $err)";
+            confess $error;
+        }
+    }
 
     pop @{$runner->monitor};
 
     $runner->wait(sets => $monitor, block => 1)
         if @$monitor;
+
+    die $err unless $ok;
 
     return;
 }
